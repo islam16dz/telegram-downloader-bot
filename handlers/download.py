@@ -70,13 +70,15 @@ async def on_text(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
 
 
 async def _updater(status_msg, state: dict, prefix: str, show: bool):
-    last = 0.0
+    from services.helpers import spin_frame
+    last, tick = 0.0, 0
     while not state.get("done"):
         await asyncio.sleep(2.5)
+        tick += 1
         if not show:
             continue
         d, t = state.get("done_bytes", 0), state.get("total", 0)
-        txt = f"{prefix}\n{progress_bar(d, t)}"
+        txt = f"{spin_frame(tick)} {prefix}\n{progress_bar(d, t)}"
         if txt != state.get("last_txt") and time.time() - last > 2.4:
             state["last_txt"] = txt
             last = time.time()

@@ -5,6 +5,12 @@ from urllib.parse import urlparse, unquote
 
 URL_RE = re.compile(r"https?://[^\s]+")
 
+SPIN = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"]
+
+
+def spin_frame(i: int) -> str:
+    return SPIN[i % len(SPIN)]
+
 
 def fmt_bytes(n) -> str:
     if not n:

@@ -15,7 +15,7 @@ from telegram.ext import (
 
 import config
 from handlers.start import start, help_cmd
-from handlers.menu import on_menu
+from handlers.menu import on_menu, webapp_cmd
 from handlers.download import on_text, on_download_btn
 from handlers.ai import ai_toggle, ai_cmd, clear_cmd
 from handlers.image import on_photo, on_image_btn
@@ -46,6 +46,7 @@ def main():
     app.add_handler(CommandHandler("del", del_cmd))
     app.add_handler(CommandHandler("ai", ai_cmd))
     app.add_handler(CommandHandler("clear", clear_cmd))
+    app.add_handler(CommandHandler("webapp", webapp_cmd))
 
     app.add_handler(CallbackQueryHandler(on_menu, pattern=r"^m:"))
     app.add_handler(CallbackQueryHandler(ai_toggle, pattern=r"^ai:"))

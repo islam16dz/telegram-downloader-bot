@@ -1,16 +1,19 @@
 """لوحات المفاتيح التفاعلية — كل القوائم في مكان واحد"""
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
 
 
-def main_menu() -> InlineKeyboardMarkup:
-    return InlineKeyboardMarkup([
+def main_menu(webapp_url: str = "") -> InlineKeyboardMarkup:
+    rows = [
         [InlineKeyboardButton("📥 قسم التحميل", callback_data="m:dl"),
          InlineKeyboardButton("🤖 الذكاء الاصطناعي", callback_data="m:ai")],
         [InlineKeyboardButton("🖼 تعديل الصور", callback_data="m:img"),
          InlineKeyboardButton("📁 ملفات الأدمن", callback_data="m:files")],
         [InlineKeyboardButton("⚙️ الإعدادات", callback_data="m:set"),
          InlineKeyboardButton("❓ مساعدة", callback_data="m:help")],
-    ])
+    ]
+    if webapp_url:
+        rows.append([InlineKeyboardButton("🌐 لوحة التحكم", web_app=WebAppInfo(url=webapp_url))])
+    return InlineKeyboardMarkup(rows)
 
 
 def back_menu(extra: list | None = None) -> InlineKeyboardMarkup:
@@ -37,6 +40,8 @@ def direct_menu(key: str) -> InlineKeyboardMarkup:
 
 def image_menu(key: str) -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup([
+        [InlineKeyboardButton("✨ تحسين 2x", callback_data=f"img:up2|{key}"),
+         InlineKeyboardButton("🚀 تحسين 4x", callback_data=f"img:up4|{key}")],
         [InlineKeyboardButton("🗜 ضغط", callback_data=f"img:compress|{key}"),
          InlineKeyboardButton("⚫ رمادي", callback_data=f"img:gray|{key}")],
         [InlineKeyboardButton("🔄 PNG", callback_data=f"img:png|{key}"),

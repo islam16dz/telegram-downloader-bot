@@ -51,21 +51,47 @@ async def clear_cmd(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
 
 
 async def answer_ai(update_or_msg, ctx: ContextTypes.DEFAULT_TYPE, prompt: str):
+    import asyncio as _aio
+    from services.helpers import spin_frame
     msg = update_or_msg.message if hasattr(update_or_msg, "message") and update_or_msg.message else update_or_msg
     if not config.GEMINI_API_KEY:
         await msg.reply_text("⚠️ خدمة الذكاء غير مفعلة (GEMINI_API_KEY ناقص).", reply_markup=kb.back_menu())
         return
-    wait = await msg.reply_text("🤖 بفكر...")
+    wait = await msg.reply_text(f"{spin_frame(0)} بفكر...")
+    stop = {"v": False}
+
+    async def _think():
+        i = 0
+        dots = ["", ".", "..", "..."]
+        while not stop["v"]:
+            await _aio.sleep(1.2)
+            i += 1
+            try:
+                await wait.edit_text(f"{spin_frame(i)} بفكر{dots[i % 4]}")
+            except Exception:
+                pass
+
+    thinker = _aio.create_task(_think())
     try:
         from services.ai_gemini import ask_sync
-        loop = asyncio.get_running_loop()
+        loop = _aio.get_running_loop()
         hist = ctx.user_data.get("ai_hist", [])
         text, new_hist = await loop.run_in_executor(None, ask_sync, config.GEMINI_API_KEY, config.AI_MODEL, hist, prompt)
         ctx.user_data["ai_hist"] = new_hist
+        stop["v"] = True
+        try:
+            thinker.cancel()
+        except Exception:
+            pass
         await wait.delete()
         for part in split_text(text):
             await msg.reply_text(part)
     except Exception as e:
+        stop["v"] = True
+        try:
+            thinker.cancel()
+        except Exception:
+            pass
         msg_err = str(e)
         if "429" in msg_err or "quota" in msg_err.lower():
             msg_err = "⚠️ تجاوزت الحصة المجانية حالياً. انتظر قليلاً وحاول مجدداً."

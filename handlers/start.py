@@ -10,15 +10,16 @@ async def start(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     ctx.user_data.setdefault("show_progress", True)
     ctx.user_data.setdefault("ai_mode", False)
     admin_hint = "\n🛠 أنت أدمن: ابعت أي ملف ليتخزن في /files" if update.effective_user.id in config.ADMIN_IDS else ""
+    webapp_hint = "\n🌐 لوحة التحكم المصغرة متاحة بالزر بالأسفل." if config.WEBAPP_URL else ""
     await update.message.reply_text(
         "👋 أهلاً بيك في **@IslamDownloaderBot**\n\n"
         "اختر قسماً من القائمة:\n"
         "📥 تحميل بالرابط (أعلى جودة / صوت)\n"
         "🤖 ذكاء اصطناعي (Gemini)\n"
-        "🖼 تعديل الصور\n"
+        "🖼 تعديل وتحسين الصور (حتى 4x)\n"
         "📁 ملفات الأدمن\n"
-        f"{admin_hint}",
-        reply_markup=main_menu(), parse_mode="Markdown",
+        f"{admin_hint}{webapp_hint}",
+        reply_markup=main_menu(config.WEBAPP_URL), parse_mode="Markdown",
     )
 
 

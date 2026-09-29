@@ -36,14 +36,40 @@ async def on_image_btn(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     if not src or not Path(src).exists():
         await q.message.reply_text("⏳ الصورة انتهت. ابعتها مجدداً.")
         return
-    status = await q.message.reply_text("🎨 جاري المعالجة...")
+    import asyncio as _aio
+    from services.helpers import spin_frame
+    status = await q.message.reply_text(f"{spin_frame(0)} جاري المعالجة...")
+    stop = {"v": False}
+
+    async def _spin():
+        i = 0
+        while not stop["v"]:
+            await _aio.sleep(1.0)
+            i += 1
+            try:
+                await status.edit_text(f"{spin_frame(i)} جاري المعالجة...")
+            except Exception:
+                pass
+
+    spinner = _aio.create_task(_spin())
     try:
         from services.image_tools import process_image
         data = Path(src).read_bytes()
-        out, fname, cap = process_image(data, op)
+        loop = _aio.get_running_loop()
+        out, fname, cap = await loop.run_in_executor(None, process_image, data, op)
+        stop["v"] = True
+        try:
+            spinner.cancel()
+        except Exception:
+            pass
         await status.delete()
         await q.message.reply_document(document=InputFile(out, filename=fname), caption=f"✅ {cap}")
     except Exception as e:
+        stop["v"] = True
+        try:
+            spinner.cancel()
+        except Exception:
+            pass
         try:
             await status.edit_text(f"❌ خطأ معالجة الصورة:\n{e}")
         except Exception:

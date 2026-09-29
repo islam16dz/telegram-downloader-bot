@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IslamDownloader — لوحة التحكم</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+  * { box-sizing: border-box; font-family: system-ui, "Segoe UI", Tahoma, sans-serif; }
+  body { margin: 0; background: linear-gradient(160deg, #0f2027, #203a43, #2c5364);
+         color: #fff; min-height: 100vh; padding: 20px 16px 40px; }
+  h1 { text-align: center; font-size: 22px; margin: 6px 0 2px; }
+  p.sub { text-align: center; opacity: .75; font-size: 13px; margin: 0 0 18px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; max-width: 480px; margin: 0 auto; }
+  .card { background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.18);
+          border-radius: 16px; padding: 18px 10px; text-align: center; cursor: pointer;
+          transition: transform .12s ease, background .12s ease; }
+  .card:active { transform: scale(.96); background: rgba(255,255,255,.18); }
+  .card .e { font-size: 34px; }
+  .card .t { font-weight: bold; margin-top: 8px; font-size: 15px; }
+  .card .d { font-size: 11px; opacity: .7; margin-top: 4px; }
+  .foot { text-align: center; opacity: .6; font-size: 11px; margin-top: 22px; }
+</style>
+</head>
+<body>
+  <h1>🤖 IslamDownloader</h1>
+  <p class="sub">لوحة التحكم المصغرة — اختر قسماً وسيُفتح البوت على القسم المطلوب</p>
+  <div class="grid">
+    <div class="card" data-cmd="/start"><div class="e">📥</div><div class="t">تحميل</div><div class="d">فيديو بأعلى جودة / صوت</div></div>
+    <div class="card" data-cmd="/ai"><div class="e">🤖</div><div class="t">ذكاء اصطناعي</div><div class="d">دردشة Gemini</div></div>
+    <div class="card" data-cmd="img"><div class="e">🖼</div><div class="t">تحسين الصور</div><div class="d">2x / 4x / فلاتر</div></div>
+    <div class="card" data-cmd="/files"><div class="e">📁</div><div class="t">ملفات الأدمن</div><div class="d">تحميل مباشر</div></div>
+  </div>
+  <p class="foot">@IslamDownloaderBot • v2</p>
+<script>
+  const tg = window.Telegram?.WebApp;
+  if (tg) { tg.ready(); tg.expand(); }
+  const BOT = "https://t.me/IslamDownloaderBot";
+  document.querySelectorAll(".card").forEach(c => {
+    c.addEventListener("click", () => {
+      const cmd = c.dataset.cmd;
+      const url = cmd === "img" ? BOT : BOT + "?start=" + encodeURIComponent(cmd);
+      if (tg) tg.openTelegramLink(url); else location.href = url;
+    });
+  });
+</script>
+</body>
+</html>

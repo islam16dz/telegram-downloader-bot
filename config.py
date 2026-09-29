@@ -20,4 +20,7 @@ MAX_SEND_BYTES: int = MAX_FILE_MB * 1024 * 1024
 GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "").strip()
 AI_MODEL: str = os.getenv("AI_MODEL", "gemini-flash-lite-latest").strip() or "gemini-flash-lite-latest"
 
+# رابط لوحة WebApp (https) — اختياري. ارفع مجلد webapp/ على GitHub Pages ثم حطه هنا
+WEBAPP_URL: str = os.getenv("WEBAPP_URL", "").strip()
+
 BOT_NAME = "@IslamDownloaderBot"
