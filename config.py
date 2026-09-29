@@ -18,6 +18,6 @@ MAX_FILE_MB: int = int(os.getenv("MAX_FILE_MB", "50"))
 MAX_SEND_BYTES: int = MAX_FILE_MB * 1024 * 1024
 
 GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "").strip()
-AI_MODEL: str = os.getenv("AI_MODEL", "gemini-1.5-flash").strip() or "gemini-1.5-flash"
+AI_MODEL: str = os.getenv("AI_MODEL", "gemini-flash-lite-latest").strip() or "gemini-flash-lite-latest"
 
 BOT_NAME = "@IslamDownloaderBot"

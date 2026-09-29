@@ -66,7 +66,10 @@ async def answer_ai(update_or_msg, ctx: ContextTypes.DEFAULT_TYPE, prompt: str):
         for part in split_text(text):
             await msg.reply_text(part)
     except Exception as e:
+        msg_err = str(e)
+        if "429" in msg_err or "quota" in msg_err.lower():
+            msg_err = "⚠️ تجاوزت الحصة المجانية حالياً. انتظر قليلاً وحاول مجدداً."
         try:
-            await wait.edit_text(f"❌ خطأ الذكاء الاصطناعي:\n{e}")
+            await wait.edit_text(f"❌ خطأ الذكاء الاصطناعي:\n{msg_err}"[:1000])
         except Exception:
             pass
