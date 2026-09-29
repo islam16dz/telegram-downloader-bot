@@ -83,7 +83,7 @@ def download_media_sync(url: str, outtmpl: str, audio_only: bool, quality: str =
         merge = "mp4"
 
     opts = {"outtmpl": outtmpl, "noplaylist": True, "quiet": True, "no_warnings": True,
-            "socket_timeout": 30, "retries": 3, "format": fmt, "progress_hooks": [_hook]}
+            "noprogress": True, "socket_timeout": 30, "retries": 3, "format": fmt, "progress_hooks": [_hook]}
     if pp:
         opts["postprocessors"] = pp
     if merge:
